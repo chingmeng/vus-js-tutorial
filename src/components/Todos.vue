@@ -1,7 +1,13 @@
 <template>
 
 <div>
-  <AddTodo v-on:add-todo="addTodo"/>
+  <input 
+    type="submit" 
+    value="Add Todo" 
+    class="btn" 
+    @click="this.$router.push({ path: '/todo_form' })"
+    style="width:100% !important"
+  >
   <div v-bind:key="todo.id" v-for="todo in todos">
     <TodoItem v-bind:todo="todo" 
         v-bind:markComplete="markComplete"
@@ -15,14 +21,12 @@
 
 <script>
 import TodoItem from './TodoItem.vue';
-import AddTodo from './AddTodo.vue';
 import axios from 'axios';
 
 export default {
   name: "Todos",
   components: {
-    TodoItem,
-    AddTodo
+    TodoItem
   },
   data() {
     return {
@@ -52,7 +56,6 @@ export default {
     },
     addTodo(newTodo) {
       const { title, completed } = newTodo;
-      console.log(title);
       axios.post('http://127.0.0.1:8001/todo/api/', {
         title, 
         completed
