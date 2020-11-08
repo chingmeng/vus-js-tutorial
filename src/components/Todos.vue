@@ -30,33 +30,45 @@ export default {
     }
   },
   methods: {
-    markComplete(id) {
-      this.todos.forEach(e => console.log(e));
-      const todo = this.todos.filter(e => e.id === id )[0];
+    markComplete(id_) {
+      
+      const todo = this.todos.filter(e => e.id === id_ )[0];
       todo.completed = !todo.completed; 
+      
+      const { id, title, completed } = todo;
+      axios.post('http://127.0.0.1:8001/todo/api/', {
+        id,
+        title, 
+        completed
+      })
+      .catch(err => console.log(err));
     },
     deleteTodo(id) {
-      axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      axios.delete(`http://127.0.0.1:8001/todo/api/?id=${id}`)
       .then(res => {
          this.todos = this.todos.filter(e => e.id !== id)
       })
       .catch(err => console.log(err));
     },
     addTodo(newTodo) {
-      console.log(newTodo);
       const { title, completed } = newTodo;
-      axios.post('https://jsonplaceholder.typicode.com/todos', {
+      console.log(title);
+      axios.post('http://127.0.0.1:8001/todo/api/', {
         title, 
         completed
       })
-      .then(res => this.todos = [...this.todos, res.data])
+      .then(res => {
+        this.todos = [...this.todos, res.data]
+      })
       .catch(err => console.log(err));
       
     }
   },
   created() {
-    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
-      .then(res => this.todos = res.data) 
+    axios.get('http://127.0.0.1:8001/todo/api/')
+      .then(res => {
+        this.todos = res.data
+      }) 
       .catch(err => console.log(err));
   }
 }
