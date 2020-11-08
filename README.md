@@ -1,4 +1,4 @@
-# test
+# vus-js-tutorial
 
 ## Project setup
 ```
