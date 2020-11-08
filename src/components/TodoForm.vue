@@ -5,6 +5,8 @@
       <p>
         <label>Title</label><br/>
         <input type="text" v-model="title" name="title" placeholder="Add Todo...">
+        <br/>
+        <span v-if="this.title === ''" style="font-size: 10pt; color:red;">Title cannot be blank</span>
       </p>
       <p>
         <label>Detail</label><br/>
@@ -32,12 +34,17 @@ export default {
   name: "AddTodo",
   data() {
     return {
-      title: '' 
+      title: ''
     }
   },
   methods: {
     submit(e) {
       e.preventDefault();
+
+      if (this.title === "") {
+        return
+      }
+
       const { id, title, detail, completed } = {
         id: this.id,
         title: this.title,
