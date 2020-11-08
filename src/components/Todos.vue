@@ -16,6 +16,7 @@
 <script>
 import TodoItem from './TodoItem.vue';
 import AddTodo from './AddTodo.vue';
+import axios from 'axios';
 
 export default {
   name: "Todos",
@@ -25,11 +26,7 @@ export default {
   },
   data() {
     return {
-      todos: [
-        { id: 1, title: "Todo One", completed: true },
-        { id: 2, title: "Todo Two", completed: true },
-        { id: 3, title: "Todo Three", completed: false }
-      ] 
+      todos: [] 
     }
   },
   methods: {
@@ -39,12 +36,28 @@ export default {
       todo.completed = !todo.completed; 
     },
     deleteTodo(id) {
-      this.todos = this.todos.filter(e => e.id !== id);
+      axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(res => {
+         this.todos = this.todos.filter(e => e.id !== id)
+      })
+      .catch(err => console.log(err));
     },
     addTodo(newTodo) {
       console.log(newTodo);
-      this.todos = [...this.todos, newTodo];
+      const { title, completed } = newTodo;
+      axios.post('https://jsonplaceholder.typicode.com/todos', {
+        title, 
+        completed
+      })
+      .then(res => this.todos = [...this.todos, res.data])
+      .catch(err => console.log(err));
+      
     }
+  },
+  created() {
+    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+      .then(res => this.todos = res.data) 
+      .catch(err => console.log(err));
   }
 }
 </script>
